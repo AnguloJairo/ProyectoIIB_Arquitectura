@@ -1,0 +1,18 @@
+Fecha,Ciudad,Temperatura (°C),Humedad (%),Presión (hPa),Descripción,Lluvia (mm),Nieve (mm)
+2025-02-06 19:25:23,New York,3.04,90,1011,mist,0,0
+2025-02-08 16:04:01,New York,0.78,46,1023,overcast clouds,0,0
+2025-02-08 16:11:16,New York,0.78,46,1023,overcast clouds,0,0
+2025-02-08 16:15:07,New York,0.78,46,1023,overcast clouds,0,0
+2025-02-08 16:30:07,New York,0.8,49,1023,overcast clouds,0,0
+2025-02-08 16:45:04,New York,0.66,50,1022,overcast clouds,0,0
+2025-02-08 17:00:08,New York,0.56,51,1022,overcast clouds,0,0
+2025-02-08 17:06:17,New York,0.51,54,1022,overcast clouds,0,0
+2025-02-08 17:14:50,New York,0.56,53,1022,overcast clouds,0,0
+2025-02-08 17:15:09,New York,0.56,53,1022,overcast clouds,0,0
+2025-02-08 17:15:15,New York,0.57,53,1022,overcast clouds,0,0
+2025-02-08 17:30:09,New York,0.57,54,1022,overcast clouds,0,0
+2025-02-08 17:45:05,New York,0.46,54,1021,overcast clouds,0,0
+2025-02-08 18:00:05,New York,0.5,56,1021,overcast clouds,0,0
+2025-02-08 18:15:05,New York,0.56,56,1021,overcast clouds,0,0
+2025-02-08 18:30:08,New York,0.56,56,1021,overcast clouds,0,0
+2025-02-08 18:45:09,New York,0.54,56,1020,overcast clouds,0,0

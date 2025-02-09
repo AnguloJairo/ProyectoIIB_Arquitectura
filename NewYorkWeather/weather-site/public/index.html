@@ -1,0 +1,658 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="es" xml:lang="es">
+<head>
+<!-- 2025-02-08 Sat 21:05 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Proyecto ICCD332 Arquitectura de Computadores</title>
+<meta name="author" content="Jairo Angulo - Anderson Herrera" />
+<meta name="generator" content="Org Mode" />
+<link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css" />
+<script>
+  window.MathJax = {
+    tex: {
+      ams: {
+        multlineWidth: '85%'
+      },
+      tags: 'ams',
+      tagSide: 'right',
+      tagIndent: '.8em'
+    },
+    chtml: {
+      scale: 1.0,
+      displayAlign: 'center',
+      displayIndent: '0em'
+    },
+    svg: {
+      scale: 1.0,
+      displayAlign: 'center',
+      displayIndent: '0em'
+    },
+    output: {
+      font: 'mathjax-modern',
+      displayOverflow: 'overflow'
+    }
+  };
+</script>
+
+<script
+  id="MathJax-script"
+  async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+</head>
+<body>
+<div id="content" class="content">
+<h1 class="title">Proyecto ICCD332 Arquitectura de Computadores</h1>
+<div id="table-of-contents" role="doc-toc">
+<h2>&Iacute;ndice</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#org7088758">1. New York Weather APP</a>
+<ul>
+<li><a href="#orgcca24ce">1.1. Estructura del proyecto</a></li>
+<li><a href="#org5255cb4">1.2. Formulación del Problema</a></li>
+<li><a href="#org156b72d">1.3. Descripción del código</a></li>
+<li><a href="#org9f69918">1.4. Script ejecutable sh</a></li>
+<li><a href="#org2e14135">1.5. Configuración de Crontab</a></li>
+</ul>
+</li>
+<li><a href="#orgd9401e4">2. Presentación de resultados</a>
+<ul>
+<li><a href="#org82b40aa">2.1. Muestra Aleatoria de datos</a></li>
+<li><a href="#org7f42c37">2.2. Gráfica Temperatura vs Tiempo</a></li>
+<li><a href="#org161d175">2.3. Realice una gráfica de Humedad con respecto al tiempo</a></li>
+<li><a href="#orgfa2f69f">2.4. <b>Opcional</b> Presente alguna gráfica de interés.</a></li>
+</ul>
+</li>
+<li><a href="#orgd5993e1">3. Referencias</a></li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org7088758" class="outline-2">
+<h2 id="org7088758"><span class="section-number-2">1.</span> New York Weather APP</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+Este es el proyecto de fin de semestre en donde se pretende demostrar
+las destrezas obtenidas durante el transcurso de la asignatura de
+<b><b>Arquitectura de Computadores</b></b>.
+</p>
+
+<ol class="org-ol">
+<li>Conocimientos de sistema operativo Linux</li>
+<li>Conocimientos de Emacs/Jupyter</li>
+<li>Configuración de Entorno para Data Science con Mamba/Anaconda</li>
+<li>Literate Programming</li>
+</ol>
+</div>
+
+<div id="outline-container-orgcca24ce" class="outline-3">
+<h3 id="orgcca24ce"><span class="section-number-3">1.1.</span> Estructura del proyecto</h3>
+<div class="outline-text-3" id="text-1-1">
+<div class="org-src-container">
+<pre class="src src-shell">mkdir NewYorkWeather
+<span style="font-weight: bold;">cd</span> NewYorkWeather
+<span style="font-weight: bold;">pwd</span>
+</pre>
+</div>
+
+<pre class="example">
+/home/andersonh/NewYorkWeather
+</pre>
+
+
+<p>
+El proyecto ha de tener los siguientes archivos y
+subdirectorios. 
+</p>
+
+<pre class="example" id="org7a1345b">
+NewYorkWeather
+├── CityTemperatureAnalysis.ipynb
+├── clima-new york-hoy.csv
+├── clima-new york-hoy.csv:Zone.Identifier
+├── get-weather.sh
+├── get_weather.py
+├── get_weather.py:Zone.Identifier
+├── main.py
+├── output.log
+├── output.log:Zone.Identifier
+└── weather-site
+    ├── build-site.el
+    ├── build.sh
+    ├── content
+    │   ├── images
+    │   └── index.org
+    └── public
+        └── images
+
+6 directories, 12 files
+</pre>
+</div>
+</div>
+
+<div id="outline-container-org5255cb4" class="outline-3">
+<h3 id="org5255cb4"><span class="section-number-3">1.2.</span> Formulación del Problema</h3>
+<div class="outline-text-3" id="text-1-2">
+<p>
+Se desea realizar un registro climatológico de una ciudad
+\(\mathcal{C}\). Para esto, escriba un script de Python/Java que permita
+obtener datos climatológicos desde el API de <a href="https://openweathermap.org/current#one">openweathermap</a>. El API
+hace uso de los valores de latitud \(x\) y longitud \(y\) de la ciudad
+\(\mathcal{C}\) para devolver los valores actuales a un tiempo \(t\).
+</p>
+
+<p>
+Los resultados obtenidos de la consulta al API se escriben en un
+archivo <i>clima-&lt;ciudad&gt;-hoy.csv</i>. Cada ejecución del script debe
+almacenar nuevos datos en el archivo. Utilice <b>crontab</b> y sus
+conocimientos de Linux y Programación para obtener datos del API de
+<i>openweathermap</i> con una periodicidad de 15 minutos mediante la
+ejecución de un archivo ejecutable denominado
+<i>get-weather.sh</i>. Obtenga al menos 50 datos. Verifique los
+resultados. Todas las operaciones se realizan en Linux o en el
+WSL. Las etapas del problema se subdividen en:
+</p>
+
+<ol class="org-ol">
+<li>Conformar los grupos de 2 estudiantes y definir la ciudad
+objeto de estudio.</li>
+<li>Crear su API gratuito en <a href="https://openweathermap.org/current#one">openweathermap</a></li>
+<li>Escribir un script en Python/Java que realice la consulta al
+API y escriba los resultados en <i>clima-&lt;ciudad&gt;-hoy.csv</i>. El
+archivo ha de contener toda la información que se obtiene del
+API en columnas. Se debe observar que los datos sobre lluvia
+(rain) y nieve (snow) se dan a veces si existe el fenómeno.</li>
+<li>Desarrollar un ejecutable <i>get-weather.sh</i> para ejecutar el
+programa Python/Java.</li>
+<li>Configurar Crontab para la adquisición de datos. Escriba el
+comando configurado. Respalde la ejecución de crontab en un
+archivo output.log</li>
+<li><p>
+Realizar la presentación del Trabajo utilizando la generación
+del sitio web por medio de Emacs. Para esto es necesario crear
+la carpeta <b><b>weather-site</b></b> dentro del proyecto. Puede ajustar el
+<i>look and feel</i> según sus preferencias. El servidor a usar es
+el <b><b>simple-httpd</b></b> integrado en Emacs que debe ser instalado:
+</p>
+<ul class="org-ul">
+<li>Usando comandos Emacs: <code>M-x package-install</code> presionamos
+enter (i.e. RET) y escribimos el nombre del paquete:
+simple-httpd</li>
+<li>Configurando el archivo init.el</li>
+</ul>
+
+<div class="org-src-container">
+<pre class="src src-elisp">(<span style="font-weight: bold;">use-package</span> simple-httpd
+   <span style="font-weight: bold;">:ensure</span> t)
+</pre>
+</div>
+
+<p>
+Instrucciones de sobre la creación del sitio web se tiene en el
+vídeo de instrucciones y en el archivo <a href="https://github.com/LeninGF/EPN-Lectures/blob/main/iccd332ArqComp-2024-A/Tutoriales/Org-Website/Org-Website.org">Org-Website.org</a> en el
+GitHub del curso
+</p></li>
+
+<li>Su código debe estar respaldado en GitHub/BitBucket, la
+dirección será remitida en la contestación de la tarea</li>
+</ol>
+</div>
+</div>
+
+<div id="outline-container-org156b72d" class="outline-3">
+<h3 id="org156b72d"><span class="section-number-3">1.3.</span> Descripción del código</h3>
+<div class="outline-text-3" id="text-1-3">
+<p>
+En esta sección se debe detallar segmentos importantes del código
+desarrollado así como la <b><b>estrategia de solución</b></b> adoptada por el
+grupo para resolver el problema. Divida su código en unidades
+funcionales para facilitar su presentación y exposición.
+</p>
+
+<p>
+Lectura del API
+</p>
+<div class="org-src-container">
+<pre class="src src-python"><span style="font-weight: bold;">import</span> requests
+<span style="font-weight: bold;">import</span> csv
+<span style="font-weight: bold;">from</span> datetime <span style="font-weight: bold;">import</span> datetime
+
+<span style="font-weight: bold; font-style: italic;">latitude</span> = <span style="font-style: italic;">"40.7128"</span>
+<span style="font-weight: bold; font-style: italic;">longitude</span> = <span style="font-style: italic;">"-74.0060"</span>
+<span style="font-weight: bold; font-style: italic;">api_key</span> = <span style="font-style: italic;">"86d6b5c0cc760093cf4e87ff6828e3cb"</span>
+<span style="font-weight: bold; font-style: italic;">url</span> = f<span style="font-style: italic;">"http://api.openweathermap.org/data/2.5/weather?lat=</span>{latitude}<span style="font-style: italic;">&amp;lon=</span>{longitude}<span style="font-style: italic;">&amp;appid=</span>{api_key}<span style="font-style: italic;">&amp;units=metric"</span>
+
+<span style="font-weight: bold; font-style: italic;"># </span><span style="font-weight: bold; font-style: italic;">Realizar solicitud a la API // Convertir /Json/ a /Diccionario/ de Python</span>
+<span style="font-weight: bold; font-style: italic;">response</span> = requests.get(url)
+<span style="font-weight: bold; font-style: italic;">data</span> = response.json()
+<span style="font-weight: bold;">print</span>(data) 
+</pre>
+</div>
+
+
+<p>
+Guardar el archivo csv
+</p>
+<div class="org-src-container">
+<pre class="src src-python"><span style="font-weight: bold;">if</span> <span style="font-style: italic;">"name"</span> <span style="font-weight: bold;">in</span> data:
+    <span style="font-weight: bold; font-style: italic;">city_name</span> = data[<span style="font-style: italic;">"name"</span>]
+    <span style="font-weight: bold; font-style: italic;">temperature</span> = data[<span style="font-style: italic;">"main"</span>][<span style="font-style: italic;">"temp"</span>]
+    <span style="font-weight: bold; font-style: italic;">humidity</span> = data[<span style="font-style: italic;">"main"</span>][<span style="font-style: italic;">"humidity"</span>]
+    <span style="font-weight: bold; font-style: italic;">pressure</span> = data[<span style="font-style: italic;">"main"</span>][<span style="font-style: italic;">"pressure"</span>]
+    <span style="font-weight: bold; font-style: italic;">weather_description</span> = data[<span style="font-style: italic;">"weather"</span>][0][<span style="font-style: italic;">"description"</span>]
+    <span style="font-weight: bold; font-style: italic;">rain</span> = data.get(<span style="font-style: italic;">"rain"</span>, {}).get(<span style="font-style: italic;">"1h"</span>, 0)  <span style="font-weight: bold; font-style: italic;"># </span><span style="font-weight: bold; font-style: italic;">Lluvia (si hay)</span>
+    <span style="font-weight: bold; font-style: italic;">snow</span> = data.get(<span style="font-style: italic;">"snow"</span>, {}).get(<span style="font-style: italic;">"1h"</span>, 0)  <span style="font-weight: bold; font-style: italic;"># </span><span style="font-weight: bold; font-style: italic;">Nieve (si hay)</span>
+
+    <span style="font-weight: bold; font-style: italic;"># </span><span style="font-weight: bold; font-style: italic;">Nombre del archivo CSV</span>
+    <span style="font-weight: bold; font-style: italic;">file_name</span> = f<span style="font-style: italic;">"clima-</span>{city_name.lower()}<span style="font-style: italic;">-hoy.csv"</span>
+
+    <span style="font-weight: bold; font-style: italic;"># </span><span style="font-weight: bold; font-style: italic;">Encabezado y datos a guardar</span>
+    <span style="font-weight: bold; font-style: italic;">header</span> = [<span style="font-style: italic;">'Fecha'</span>, <span style="font-style: italic;">'Ciudad'</span>, <span style="font-style: italic;">'Temperatura (&#176;C)'</span>, <span style="font-style: italic;">'Humedad (%)'</span>, <span style="font-style: italic;">'Presi&#243;n (hPa)'</span>, <span style="font-style: italic;">'Descripci&#243;n'</span>, <span style="font-style: italic;">'Lluvia (mm)'</span>, <span style="font-style: italic;">'Nieve (mm)'</span>]
+    <span style="font-weight: bold; font-style: italic;">row</span> = [datetime.now().strftime(<span style="font-style: italic;">'%Y-%m-%d %H:%M:%S'</span>), city_name, temperature, humidity, pressure, weather_description, rain, snow]
+
+    <span style="font-weight: bold; font-style: italic;"># </span><span style="font-weight: bold; font-style: italic;">Verificar si el archivo ya existe</span>
+    <span style="font-weight: bold; font-style: italic;">file_exists</span> = <span style="font-weight: bold; text-decoration: underline;">False</span>
+    <span style="font-weight: bold;">try</span>:
+        <span style="font-weight: bold;">with</span> <span style="font-weight: bold;">open</span>(file_name, <span style="font-style: italic;">'r'</span>):
+            <span style="font-weight: bold; font-style: italic;">file_exists</span> = <span style="font-weight: bold; text-decoration: underline;">True</span>
+    <span style="font-weight: bold;">except</span> <span style="font-weight: bold; text-decoration: underline;">FileNotFoundError</span>:
+        <span style="font-weight: bold;">pass</span>
+
+    <span style="font-weight: bold; font-style: italic;"># </span><span style="font-weight: bold; font-style: italic;">Guardar datos en CSV</span>
+    <span style="font-weight: bold;">with</span> <span style="font-weight: bold;">open</span>(file_name, mode=<span style="font-style: italic;">'a'</span>, newline=<span style="font-style: italic;">''</span>) <span style="font-weight: bold;">as</span> <span style="font-weight: bold;">file</span>:
+        <span style="font-weight: bold; font-style: italic;">writer</span> = csv.writer(<span style="font-weight: bold;">file</span>)
+        <span style="font-weight: bold;">if</span> <span style="font-weight: bold;">not</span> file_exists:
+            writer.writerow(header)  <span style="font-weight: bold; font-style: italic;"># </span><span style="font-weight: bold; font-style: italic;">Escribir encabezado solo si el archivo no existe</span>
+        writer.writerow(row)
+
+    <span style="font-weight: bold;">print</span>(f<span style="font-style: italic;">"Datos climatol&#243;gicos guardados en </span>{file_name}<span style="font-style: italic;">"</span>)
+<span style="font-weight: bold;">else</span>:
+    <span style="font-weight: bold;">print</span>(<span style="font-style: italic;">"Error: No se pudo obtener el nombre de la ciudad. Verifique la API."</span>)
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org9f69918" class="outline-3">
+<h3 id="org9f69918"><span class="section-number-3">1.4.</span> Script ejecutable sh</h3>
+<div class="outline-text-3" id="text-1-4">
+<p>
+Se coloca el contenido del script ejecutable. Recuerde que se debe
+utilizar el entorno de <b><b>anaconda/mamba</b></b> denominado <b><b>iccd332</b></b> para
+la ejecución de Python; independientemente de que tenga una
+instalación nativa de Python
+</p>
+
+<p>
+En el caso de los shell script se puede usar `which sh` para conocer
+la ubicación del ejecutable
+</p>
+<div class="org-src-container">
+<pre class="src src-shell">which sh
+</pre>
+</div>
+
+<pre class="example">
+/usr/bin/sh
+</pre>
+
+
+<p>
+De igual manera se requiere localizar el entorno de mamba <b>iccd332</b>
+que será utilizado
+</p>
+
+<div class="org-src-container">
+<pre class="src src-shell">which mamba
+</pre>
+</div>
+
+<p>
+Con esto el archivo ejecutable a de tener (adapte el código según las
+condiciones de su máquina):
+</p>
+
+<div class="org-src-container">
+<pre class="src src-shell"><span style="font-weight: bold; font-style: italic;">#</span><span style="font-weight: bold; font-style: italic;">!/usr/bin/</span><span style="font-weight: bold;">sh</span>
+<span style="font-weight: bold;">source</span> /home/andersonh/miniforge3/etc/profile.d/conda.sh
+<span style="font-weight: bold;">eval</span> <span style="font-style: italic;">"$(</span><span style="font-weight: bold;">conda shell.bash hook</span><span style="font-style: italic;">)"</span>
+conda  activate iccd332
+python /home/andersonh/NewYorkWeather/get_weather.py
+</pre>
+</div>
+
+<p>
+Finalmente convierta en ejecutable como se explicó en clases y laboratorio
+</p>
+<div class="org-src-container">
+<pre class="src src-shell"><span style="font-weight: bold; font-style: italic;">#</span><span style="font-weight: bold; font-style: italic;">!/usr/bin/</span><span style="font-weight: bold;">sh</span>
+./get-weather.sh
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org2e14135" class="outline-3">
+<h3 id="org2e14135"><span class="section-number-3">1.5.</span> Configuración de Crontab</h3>
+<div class="outline-text-3" id="text-1-5">
+<p>
+Se indica la configuración realizada en crontab para la adquisición de datos
+</p>
+
+<div class="org-src-container">
+<pre class="src src-shell">*/15 * * * * cd NewYorkWeather &amp;&amp; ./get-weather.sh &gt;&gt; output.log 2&gt;&amp;1
+</pre>
+</div>
+
+<ul class="org-ul">
+<li>Recuerde que <code>2&gt;&amp;1</code> permite guardar en <code>output.log</code> tanto la salida
+del programa como los errores en la ejecución.</li>
+</ul>
+</div>
+</div>
+</div>
+<div id="outline-container-orgd9401e4" class="outline-2">
+<h2 id="orgd9401e4"><span class="section-number-2">2.</span> Presentación de resultados</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+Para la presentación de resultados se utilizan las librerías de Python:
+</p>
+<ul class="org-ul">
+<li>matplotlib</li>
+<li>pandas</li>
+</ul>
+
+<p>
+Alternativamente como pudo estudiar en el Jupyter Notebook
+<a href="https://github.com/LeninGF/EPN-Lectures/blob/main/iccd332ArqComp-2024-A/Proyectos/CityWeather/CityTemperatureAnalysis.ipynb">CityTemperatureAnalysis.ipynb</a>, existen librerías alternativas que se
+pueden utilizar para presentar los resultados gráficos. En ambos
+casos, para que funcione los siguientes bloques de código, es
+necesario que realice la instalación de los paquetes usando <code>mamba
+install &lt;nombre-paquete&gt;</code>
+</p>
+</div>
+<div id="outline-container-org82b40aa" class="outline-3">
+<h3 id="org82b40aa"><span class="section-number-3">2.1.</span> Muestra Aleatoria de datos</h3>
+<div class="outline-text-3" id="text-2-1">
+<p>
+Presentar una muestra de 10 valores aleatorios de los datos obtenidos.
+</p>
+<div class="org-src-container">
+<label class="org-src-name"><span class="listing-number">Listado de programa 1 </span>Lectura de archivo csv</label><pre class="src src-python"><span style="font-weight: bold;">import</span> os
+<span style="font-weight: bold;">import</span> pandas <span style="font-weight: bold;">as</span> pd
+<span style="font-weight: bold; font-style: italic;"># </span><span style="font-weight: bold; font-style: italic;">lectura del archivo csv obtenido</span>
+<span style="font-weight: bold; font-style: italic;">df</span> = pd.read_csv(<span style="font-style: italic;">'/home/andersonh/NewYorkWeather/clima-new york-hoy.csv'</span>)
+<span style="font-weight: bold; font-style: italic;"># </span><span style="font-weight: bold; font-style: italic;">se imprime la estructura del dataframe en forma de filas x columnas</span>
+<span style="font-weight: bold;">print</span>(df.shape)
+</pre>
+</div>
+
+<p>
+Resultado del número de filas y columnas leídos del archivo csv
+</p>
+<pre class="example">
+(11, 8)
+</pre>
+
+
+<div class="org-src-container">
+<label class="org-src-name"><span class="listing-number">Listado de programa 2 </span>Despliegue de datos aleatorios</label><pre class="src src-python"><span style="font-weight: bold; font-style: italic;">table1</span> = df.sample(10)
+<span style="font-weight: bold; font-style: italic;">table</span> = [<span style="font-weight: bold;">list</span>(table1)]+[<span style="font-weight: bold; text-decoration: underline;">None</span>]+table1.values.tolist()
+</pre>
+</div>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-right" />
+
+<col  class="org-right" />
+
+<col  class="org-right" />
+
+<col  class="org-left" />
+
+<col  class="org-right" />
+
+<col  class="org-right" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">Fecha</th>
+<th scope="col" class="org-left">Ciudad</th>
+<th scope="col" class="org-right">Temperatura (°C)</th>
+<th scope="col" class="org-right">Humedad (%)</th>
+<th scope="col" class="org-right">Presión (hPa)</th>
+<th scope="col" class="org-left">Descripción</th>
+<th scope="col" class="org-right">Lluvia (mm)</th>
+<th scope="col" class="org-right">Nieve (mm)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">2025-02-08 17:15:15</td>
+<td class="org-left">New York</td>
+<td class="org-right">0.57</td>
+<td class="org-right">53</td>
+<td class="org-right">1022</td>
+<td class="org-left">overcast clouds</td>
+<td class="org-right">0</td>
+<td class="org-right">0</td>
+</tr>
+
+<tr>
+<td class="org-left">2025-02-08 16:30:07</td>
+<td class="org-left">New York</td>
+<td class="org-right">0.8</td>
+<td class="org-right">49</td>
+<td class="org-right">1023</td>
+<td class="org-left">overcast clouds</td>
+<td class="org-right">0</td>
+<td class="org-right">0</td>
+</tr>
+
+<tr>
+<td class="org-left">2025-02-08 16:11:16</td>
+<td class="org-left">New York</td>
+<td class="org-right">0.78</td>
+<td class="org-right">46</td>
+<td class="org-right">1023</td>
+<td class="org-left">overcast clouds</td>
+<td class="org-right">0</td>
+<td class="org-right">0</td>
+</tr>
+
+<tr>
+<td class="org-left">2025-02-06 19:25:23</td>
+<td class="org-left">New York</td>
+<td class="org-right">3.04</td>
+<td class="org-right">90</td>
+<td class="org-right">1011</td>
+<td class="org-left">mist</td>
+<td class="org-right">0</td>
+<td class="org-right">0</td>
+</tr>
+
+<tr>
+<td class="org-left">2025-02-08 16:15:07</td>
+<td class="org-left">New York</td>
+<td class="org-right">0.78</td>
+<td class="org-right">46</td>
+<td class="org-right">1023</td>
+<td class="org-left">overcast clouds</td>
+<td class="org-right">0</td>
+<td class="org-right">0</td>
+</tr>
+
+<tr>
+<td class="org-left">2025-02-08 17:06:17</td>
+<td class="org-left">New York</td>
+<td class="org-right">0.51</td>
+<td class="org-right">54</td>
+<td class="org-right">1022</td>
+<td class="org-left">overcast clouds</td>
+<td class="org-right">0</td>
+<td class="org-right">0</td>
+</tr>
+
+<tr>
+<td class="org-left">2025-02-08 16:45:04</td>
+<td class="org-left">New York</td>
+<td class="org-right">0.66</td>
+<td class="org-right">50</td>
+<td class="org-right">1022</td>
+<td class="org-left">overcast clouds</td>
+<td class="org-right">0</td>
+<td class="org-right">0</td>
+</tr>
+
+<tr>
+<td class="org-left">2025-02-08 17:15:09</td>
+<td class="org-left">New York</td>
+<td class="org-right">0.56</td>
+<td class="org-right">53</td>
+<td class="org-right">1022</td>
+<td class="org-left">overcast clouds</td>
+<td class="org-right">0</td>
+<td class="org-right">0</td>
+</tr>
+
+<tr>
+<td class="org-left">2025-02-08 17:00:08</td>
+<td class="org-left">New York</td>
+<td class="org-right">0.56</td>
+<td class="org-right">51</td>
+<td class="org-right">1022</td>
+<td class="org-left">overcast clouds</td>
+<td class="org-right">0</td>
+<td class="org-right">0</td>
+</tr>
+
+<tr>
+<td class="org-left">2025-02-08 17:14:50</td>
+<td class="org-left">New York</td>
+<td class="org-right">0.56</td>
+<td class="org-right">53</td>
+<td class="org-right">1022</td>
+<td class="org-left">overcast clouds</td>
+<td class="org-right">0</td>
+<td class="org-right">0</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<div id="outline-container-org7f42c37" class="outline-3">
+<h3 id="org7f42c37"><span class="section-number-3">2.2.</span> Gráfica Temperatura vs Tiempo</h3>
+<div class="outline-text-3" id="text-2-2">
+
+<div id="orgb3ff1c4" class="figure">
+<p><img src="./images/grafica.jpg" alt="grafica.jpg" />
+</p>
+</div>
+
+
+
+
+<p>
+El siguiente cógido permite hacer la gráfica de la temperatura vs
+tiempo para Org 9.7+. Para saber que versión dispone puede ejecutar
+<code>M-x org-version</code>
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python"><span style="font-weight: bold;">import</span> matplotlib.pyplot <span style="font-weight: bold;">as</span> plt
+<span style="font-weight: bold;">import</span> matplotlib.dates <span style="font-weight: bold;">as</span> mdates
+<span style="font-weight: bold;">import</span> pandas <span style="font-weight: bold;">as</span> pd
+<span style="font-weight: bold; font-style: italic;">df</span> = pd.read_csv(<span style="font-style: italic;">'/home/andersonh/NewYorkWeather/clima-new-york-hoy.csv'</span>)
+<span style="font-weight: bold; font-style: italic;">fig</span> = plt.figure(figsize=(8, 6))
+plt.plot(df[<span style="font-style: italic;">'dt'</span>], df[<span style="font-style: italic;">'main_temp'</span>])
+plt.gca().xaxis.set_major_locator(mdates.DayLocator(interval=2))
+plt.grid()
+plt.title(f<span style="font-style: italic;">'Main Temp vs Time in </span>{<span style="font-weight: bold;">next</span>(<span style="font-weight: bold;">iter</span>(<span style="font-weight: bold;">set</span>(df["name"])))}<span style="font-style: italic;">'</span>)
+plt.xticks(rotation=40)
+fig.tight_layout()
+<span style="font-weight: bold; font-style: italic;">image_path</span> = <span style="font-style: italic;">'/home/andersonh/NewYorkWeather/weather-site/content/images/temperature.png'</span>
+plt.savefig(image_path)
+<span style="font-weight: bold;">print</span>(f<span style="font-style: italic;">"Imagen guardada en: </span>{image_path}<span style="font-style: italic;">"</span>)
+</pre>
+</div>
+
+<p>
+<a href=""></a>
+</p>
+
+<p>
+Debido a que el archivo index.org se abre dentro de la carpeta
+<i>content</i>, y en cambio el servidor http de emacs se ejecuta desde la
+carpeta <i>public</i> es necesario copiar el archivo a la ubicación
+equivalente en <code>/public/images</code>
+</p>
+
+<div class="org-src-container">
+<pre class="src src-shell">cp -rfv /home/andersonh/NewYorkWeather/weather-site/content/images/* /home/andersonh/NewYorkWeather/weather-site/public/images
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org161d175" class="outline-3">
+<h3 id="org161d175"><span class="section-number-3">2.3.</span> Realice una gráfica de Humedad con respecto al tiempo</h3>
+<div class="outline-text-3" id="text-2-3">
+<div class="org-src-container">
+<pre class="src src-python"><span style="font-weight: bold;">import</span> matplotlib.pyplot <span style="font-weight: bold;">as</span> plt
+<span style="font-weight: bold;">import</span> matplotlib.dates <span style="font-weight: bold;">as</span> mdates
+<span style="font-weight: bold; font-style: italic;">fig</span> = plt.figure(figsize=(8,6))
+plt.plot(df[<span style="font-style: italic;">'dt'</span>], df[<span style="font-style: italic;">'main_humidity'</span>]) 
+plt.gca().xaxis.set_major_locator(mdates.DayLocator(interval=2))  <span style="font-weight: bold; font-style: italic;"># </span><span style="font-weight: bold; font-style: italic;">Ajuste del intervalo</span>
+plt.gca().xaxis.set_major_formatter(mdates.DateFormatter(<span style="font-style: italic;">'%Y-%m-%d'</span>))  <span style="font-weight: bold; font-style: italic;"># </span><span style="font-weight: bold; font-style: italic;">Formato de fecha</span>
+plt.grid()
+plt.title(f<span style="font-style: italic;">'Humidity vs Time in </span>{<span style="font-weight: bold;">next</span>(<span style="font-weight: bold;">iter</span>(<span style="font-weight: bold;">set</span>(df.name)))}<span style="font-style: italic;">'</span>)
+plt.xticks(rotation=40) 
+fig.tight_layout()
+<span style="font-weight: bold; font-style: italic;">fname</span> = <span style="font-style: italic;">'./images/humidity.png'</span>
+plt.savefig(fname)
+fname
+</pre>
+</div>
+
+<p>
+<a href=""></a>
+</p>
+</div>
+</div>
+
+
+<div id="outline-container-orgfa2f69f" class="outline-3">
+<h3 id="orgfa2f69f"><span class="section-number-3">2.4.</span> <b>Opcional</b> Presente alguna gráfica de interés.</h3>
+</div>
+</div>
+
+<div id="outline-container-orgd5993e1" class="outline-2">
+<h2 id="orgd5993e1"><span class="section-number-2">3.</span> Referencias</h2>
+<div class="outline-text-2" id="text-3">
+<ul class="org-ul">
+<li><a href="https://emacs.stackexchange.com/questions/28715/get-pandas-data-frame-as-a-table-in-org-babel">presentar dataframe como tabla en emacs org</a></li>
+<li><a href="https://orgmode.org/worg/org-contrib/babel/languages/ob-doc-python.html">Python Source Code Blocks in Org Mode</a></li>
+<li><a href="https://systemcrafters.net/publishing-websites-with-org-mode/building-the-site/">Systems Crafters Construir tu sitio web con Modo Emacs Org</a></li>
+<li><a href="https://www.youtube.com/watch?v=AfkrzFodoNw">Vídeo Youtube Build Your Website with Org Mode</a></li>
+</ul>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="date">Fecha: 2024-02-08</p>
+<p class="author">Autor: Jairo Angulo - Anderson Herrera</p>
+<p class="date">Created: 2025-02-08 Sat 21:05</p>
+</div>
+</body>
+</html>
